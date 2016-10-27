@@ -14,7 +14,8 @@ const pageSchema = new Schema({
 	content: {type: String, require: true},
 	status: {type: String, enum: ['open', 'closed']},
 	date: {type:Date, default: Date.now},
-	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+	tags: [String]
 },{
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -39,12 +40,31 @@ pageSchema.pre('validate',function(next) {
 	let urlTitle = generateUrlTitle(this.title);
 	this.urlTitle = urlTitle;
 	next();
-})
+});
+
+pageSchema.statics.findByTag = function(tags) {
+	return this.find({ tags: {$in: tags} }).exec();
+}
+
+pageSchema.methods.findSimilar =  function() {
+	return Page.find({ tags: {$in: this.tags}}).exec();
+}
 
 const userSchema =  new Schema({
 	name: {type: String, require: true},
 	email: {type: String, require: true, unique: true}
 });
+
+userSchema.statics.findOrCreate = function (person) {
+	return this.findOne({email: person.email}).exec()
+		.then(function(user) {
+			if(user) return user;
+			else {
+				let newUser = new User({name: person.name, email: person.email});
+				return newUser.save();
+			}
+		});
+}
 
 const Page = mongoose.model('Page', pageSchema);
 const User = mongoose.model('User', userSchema);

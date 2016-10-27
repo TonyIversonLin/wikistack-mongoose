@@ -3,9 +3,11 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const swig = require('swig');
+require('./filters')(swig);
 const bodyParser = require('body-parser');
 const path = require('path');
 const wikiRoute = require('./routes/wiki.js'); //plug in our router
+const userRoute = require('./routes/users.js');
 
 
 // logging middleware
@@ -27,6 +29,7 @@ app.use(bodyParser.json()); // would be for AJAX requests
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.use('/wiki',wikiRoute);
+app.use('/users',userRoute);
 
 app.listen(3000, function () {
     console.log('Server is listening on port 3000!');
