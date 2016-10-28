@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>{{user.name}} <small> ({{user.email}})</small></h3>
+  <hr/>
+    {% for page in pages %}
+     <li>{{page | pageLink}}</li>
+    {% endfor %}
+  <hr/>
+  <a href="PLACEHOLDER_URL_TITLE/edit" class="btn btn-primary">edit this page</a>
+  <a href="PLACEHOLDER_URL_TITLE/delete" class="btn btn-danger">delete this page</a>
+{% endblock %}

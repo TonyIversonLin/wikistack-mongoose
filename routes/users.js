@@ -18,21 +18,13 @@ router.get('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
 	let userPromise = User.findById(req.params.id).exec();
   let pagesPromise = Page.find({ author: req.params.id }).exec();
+ 
   Promise.all([userPromise, pagesPromise])
   	.then(function(result) {
   		res.render('user',{user: result[0], pages: result[1]})
   	})
-  	.catch(next)
+  	.catch(next);
 })
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;

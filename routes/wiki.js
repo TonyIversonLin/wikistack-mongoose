@@ -73,15 +73,28 @@ router.get('/add', function(req,res,next) {
 });
 
 router.get('/:urlTitle',function(req,res,next) {
+	let foundPage 
 	Page.findOne({urlTitle: req.params.urlTitle}).exec()
-		.then(function(foundPage) {
+		.then(function(result) {
+			foundPage = result;
+			return User.findById(result.author).exec()
+		}).then(function(user) {
 			res.render('wikipage', {
 				title: foundPage.title,
 				content: foundPage.content,
 				tags: foundPage.tags,
-				urlTitle: foundPage.urlTitle
+				urlTitle: foundPage.urlTitle,
+				user: user,
+				renderedContent: foundPage.renderedContent
 			})
-		}).catch(next);
+		})
+		.catch(next);
+});
+
+router.get('/delete/:title', function(req, res, next) {
+	Page.find({title: req.params.title}).remove().exec()
+		.then(res.redirect('/wiki'))
+		.catch(next);
 })
 
 

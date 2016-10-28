@@ -2,16 +2,18 @@
 
 {% block content %}
   <h3>{{title}} <small> (<a href="/wiki/similar/{{urlTitle}}">Similar</a>)</small></h3>
-  <h4>by <a href="PLACEHOLDER-AUTHOR-URL">PLACEHOLDER AUTHOR NAME</a></h4>
+  <h4>by <a href="/users/{{ user._id.toString() }}">{{user.name}}</a></h4>
   <div class="page-body">
     {% for tag in tags %}
      <a href="/wiki/search?tags={{tag}}">{{tag}}</a>
     {% endfor %}
   </div>
   <hr/>
-  <div>PLACEHOLDER AUTHOR NAME WITH LINK TO AUTHOR PAGE</div>
   <div class="page-body">{{content}}</div>
+  <div class="page-body">
+    {% autoescape false %}{{ renderedContent }}{% endautoescape %}
+  </div>
   <hr/>
   <a href="PLACEHOLDER_URL_TITLE/edit" class="btn btn-primary">edit this page</a>
-  <a href="PLACEHOLDER_URL_TITLE/delete" class="btn btn-danger">delete this page</a>
+  <a href="/wiki/delete/{{title}}" class="btn btn-danger">delete this page</a>
 {% endblock %}
